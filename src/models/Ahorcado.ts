@@ -1,52 +1,104 @@
 export default class Ahorcado {
   public nick: string;
-  public palabra: string;
+  public palabra: string = null;
   public pista: string;
-  public gano: boolean = false;
-  private palabras: [string] = ['fibonacci']; //Dijo profesor que it's ok usar una sola para el primer sprint
+  private readonly palabras: string[] = [
+    'fibonacci',
+    'espejo',
+    'celular',
+    'ruta',
+    'zapatilla',
+    'oreja',
+    'mortadela',
+    'corrientes',
+    'boliviano',
+  ];
+  private readonly maxFallos = 6;
   public fallos: number = 0;
 
-  public loginSimple(nick: string) {
+  public juegosGanados: number = 0;
+  public juegosTotales: number = 0;
+  private palabrasUsadas: string[] = [];
+
+  public setNick(nick: string) {
     this.nick = nick;
+  }
+
+  public reset() {
+    this.fallos = 0;
+    this.palabra = null;
+    this.pista = null;
+  }
+
+  public tryWord(word: string) {
+    if(word===this.palabra){
+      this.pista=this.palabra;
+      this.juegosGanados++;
+    } else {
+      this.fallos = this.maxFallos;
+    }
+    this.juegosTotales++;
   }
 
   public getState() {
     return {
       pista: this.pista,
       fallos: this.fallos,
-      gano: this.gano,
-      perdio: this.fallos === 6,
+      gano: this.palabra!==null && this.pista === this.palabra,
+      perdio: this.fallos === this.maxFallos,
+      juegosGanados: this.juegosGanados,
+      juegosTotales: this.juegosTotales,
     };
   }
 
   private setPista() {
-    this.pista = this.palabra.split("").map(c => "_").join("")
+    this.pista = this.palabra
+      .split('')
+      .map((c) => '_')
+      .join('');
   }
 
   public setRandomWord() {
-    const randomIndex = Math.round(Math.random() * (this.palabras.length - 1))
+    let palabrasNoUsadas = this.palabras.filter(
+      (palabra) => !this.palabrasUsadas.includes(palabra),
+    );
+    if (palabrasNoUsadas.length === 0) {
+      this.palabrasUsadas = [];
+      palabrasNoUsadas = this.palabras;
+    }
+    const randomIndex = Math.round(Math.random() * (this.palabras.length - 1));
     this.palabra = this.palabras[randomIndex];
-    this.setPista()
+    this.setPista();
   }
 
   public setWord(word: string) {
     this.palabra = word.toLowerCase();
-    this.setPista()
+    this.setPista();
   }
 
   public tryLetter(letter: string) {
-    letter = letter[0].toLowerCase()
-    const indexes = this.palabra.split("").map((v, i) => ({ v, i })).filter(l => l.v === letter).map(l => l.i)
+    if (!this.palabra) throw new Error('Game not started');
+    letter = letter[0].toLowerCase();
+    if (this.pista === this.palabra || this.fallos === this.maxFallos) {
+      throw new Error('Game already ended');
+    }
+    const indexes = this.palabra
+      .split('')
+      .map((v, i) => ({ v, i }))
+      .filter((l) => l.v === letter)
+      .map((l) => l.i);
     if (indexes.length > 0) {
-      this.pista = this.pista.split("").map((v, i) => indexes.includes(i) ? letter : v).join("")
-      if (this.pista === this.palabra) {
-        this.gano = true;
-      }
+      this.pista = this.pista
+        .split('')
+        .map((v, i) => (indexes.includes(i) ? letter : v))
+        .join('');
     } else {
       this.fallos++;
-      if (this.fallos === 6) {
-        this.pista = this.palabra;
-      }
+    }
+    if (this.pista === this.palabra || this.fallos === this.maxFallos) {
+      if (this.pista === this.palabra) this.juegosGanados++;
+      this.juegosTotales++;
+      this.palabrasUsadas.push(this.palabra);
     }
   }
 }
