@@ -2,7 +2,7 @@ import express from 'express'
 import Ahorcado from './models/Ahorcado';
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 const gameMap: { [key: string]: Ahorcado } = {}
 
