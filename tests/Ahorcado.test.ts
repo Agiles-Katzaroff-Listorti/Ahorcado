@@ -1,4 +1,4 @@
-import Ahorcado from '../src/Ahorcado';
+import Ahorcado from '../src/models/Ahorcado';
 
 function getNewGame() {
   return new Ahorcado();
@@ -12,14 +12,14 @@ test('Entrar sin login', () => {
 
 test('Elegir palabra', () => {
   const juego = getNewGame();
-  juego.setRandomWord();
+  juego.setWord("fibonacci");
   expect(juego.palabra).toBe('fibonacci');
 });
 
 test('Errar 6 letras', () => {
   const juego = getNewGame();
   juego.loginSimple('Pepe');
-  juego.setRandomWord();
+  juego.setWord("fibonacci");
   juego.tryLetter('e');
   juego.tryLetter('e');
   juego.tryLetter('e');
@@ -32,7 +32,7 @@ test('Errar 6 letras', () => {
 test('Acertar todas', () => {
   const juego = getNewGame();
   juego.loginSimple('Pepe');
-  juego.setRandomWord();
+  juego.setWord("fibonacci");
   juego.tryLetter('f');
   juego.tryLetter('i');
   juego.tryLetter('b');
