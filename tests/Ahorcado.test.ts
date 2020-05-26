@@ -108,3 +108,50 @@ test('Arriesgar palabra mal', ()=>{
   juego.tryWord("maradona")
   expect(juego.getState().perdio).toBe(true)
 })
+
+test('Jugar 3 partidas bien', ()=>{
+  const juego = getNewGame();
+  juego.setNick("Pepe");
+  juego.setWord("fibonacci")
+  juego.tryWord("fibonacci")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("fibonacci")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("fibonacci")
+  juego.reset();
+  expect(juego.getState().juegosGanados).toBe(3);
+  expect(juego.getState().juegosTotales).toBe(3);
+})
+
+test('Jugar 2 partidas bien y una mal',()=> {
+  const juego = getNewGame();
+  juego.setNick('Pepe');
+  juego.setWord("fibonacci")
+  juego.tryWord("fibonacci")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("fibonacci")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("asdad")
+  expect(juego.getState().juegosTotales).toBe(3);
+  expect(juego.getState().juegosGanados).toBe(2);
+})
+
+test('Jugar 3 partidas mal', ()=>{
+  const juego = getNewGame();
+  juego.setNick("Pepe");
+  juego.setWord("fibonacci")
+  juego.tryWord("maradona")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("maradona")
+  juego.reset();
+  juego.setWord("fibonacci")
+  juego.tryWord("maradona")
+  juego.reset();
+  expect(juego.getState().juegosTotales).toBe(3);
+  expect(juego.getState().juegosGanados).toBe(0);
+})

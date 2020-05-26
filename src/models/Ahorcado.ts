@@ -11,7 +11,6 @@ export default class Ahorcado {
     'oreja',
     'mortadela',
     'corrientes',
-    'boliviano',
   ];
   private readonly maxFallos = 6;
   public fallos: number = 0;
