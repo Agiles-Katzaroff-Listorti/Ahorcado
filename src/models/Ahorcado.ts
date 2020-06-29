@@ -30,8 +30,8 @@ export default class Ahorcado {
   }
 
   public tryWord(word: string) {
-    if(word===this.palabra){
-      this.pista=this.palabra;
+    if (word === this.palabra) {
+      this.pista = this.palabra;
       this.juegosGanados++;
     } else {
       this.fallos = this.maxFallos;
@@ -40,14 +40,16 @@ export default class Ahorcado {
   }
 
   public getState() {
-    return {
+    let state: any = {
       pista: this.pista,
       fallos: this.fallos,
-      gano: this.palabra!==null && this.pista === this.palabra,
+      gano: this.palabra !== null && this.pista === this.palabra,
       perdio: this.fallos === this.maxFallos,
       juegosGanados: this.juegosGanados,
       juegosTotales: this.juegosTotales,
     };
+    if (state.gano || state.perdio) state.palabra = this.palabra;
+    return state;
   }
 
   private setPista() {
@@ -58,12 +60,15 @@ export default class Ahorcado {
   }
 
   public setRandomWord() {
+    this.reset();
     let palabrasNoUsadas = this.palabras.filter(
       (palabra) => !this.palabrasUsadas.includes(palabra),
     );
     if (palabrasNoUsadas.length === 0) {
-      this.palabrasUsadas = [];
-      palabrasNoUsadas = this.palabras;
+      this.palabrasUsadas = [this.palabrasUsadas[this.palabrasUsadas.length]];
+      palabrasNoUsadas = this.palabras.filter(
+        (palabra) => !this.palabrasUsadas.includes(palabra),
+      );
     }
     const randomIndex = Math.round(Math.random() * (this.palabras.length - 1));
     this.palabra = this.palabras[randomIndex];
@@ -71,6 +76,7 @@ export default class Ahorcado {
   }
 
   public setWord(word: string) {
+    this.reset();
     this.palabra = word.toLowerCase();
     this.setPista();
   }

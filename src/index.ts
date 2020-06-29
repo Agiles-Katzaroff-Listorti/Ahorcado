@@ -6,14 +6,23 @@ const port = process.env.PORT || 3000;
 
 const gameMap: { [key: string]: Ahorcado } = {};
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  next();
+});
+
 app.post('/:nick', (req, res) => {
   if (gameMap[req.params.nick]) {
-    res.send('Name already taken');
+    res.send({ error: 'Name already taken' });
   } else {
     const game = new Ahorcado();
     game.setNick(req.params.nick);
     gameMap[req.params.nick] = game;
-    res.send('Nick set: ' + req.params.nick);
+    res.send({ nick: req.params.nick });
   }
 });
 
@@ -41,7 +50,7 @@ app.get('/:nick', (req, res) =>
   res.send(
     gameMap[req.params.nick]
       ? gameMap[req.params.nick].getState()
-      : "Nick doesn't exist",
+      : { error: "Nick doesn't exist" },
   ),
 );
 
