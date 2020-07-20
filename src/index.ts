@@ -16,6 +16,8 @@ app.use(function (req, res, next) {
 });
 
 app.post('/:nick', (req, res) => {
+  // EJEMPLO: test-pepito
+  if(req.params.nick.split("-")[0]==="test") delete gameMap[req.params.nick]
   if (gameMap[req.params.nick]) {
     res.send({ error: 'Name already taken' });
   } else {
@@ -27,7 +29,12 @@ app.post('/:nick', (req, res) => {
 });
 
 app.post('/:nick/start', (req, res) => {
+  const testNick = req.params.nick.split("-")
+  if(testNick[0]==="test") {
+    gameMap[req.params.nick].setWord(testNick[1]);
+  }else{
   gameMap[req.params.nick].setRandomWord();
+  }
   res.send(gameMap[req.params.nick].getState());
 });
 
