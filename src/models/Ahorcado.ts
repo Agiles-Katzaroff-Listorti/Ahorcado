@@ -32,7 +32,7 @@ export default class Ahorcado {
   public tryWord(word: string) {
     if (word === this.palabra) {
       this.pista = this.palabra;
-      this.juegosGanados++;
+      this.juegosGanados = 0;
     } else {
       this.fallos = this.maxFallos;
     }
@@ -101,7 +101,7 @@ export default class Ahorcado {
       this.fallos++;
     }
     if (this.pista === this.palabra || this.fallos === this.maxFallos) {
-      if (this.pista === this.palabra) this.juegosGanados++;
+      if (this.pista === this.palabra) this.juegosGanados=0;
       this.juegosTotales++;
       this.palabrasUsadas.push(this.palabra);
     }
