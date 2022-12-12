@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/express": "^4.17.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "tslib": "~1.11.2"
   }
 }
